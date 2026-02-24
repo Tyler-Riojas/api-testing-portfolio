@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.portfolio</groupId>
+    <artifactId>restassured-api-testing</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>RestAssured API Testing Portfolio</name>
+    <description>Professional REST API testing framework demonstrating RestAssured, TestNG, and Extent Reports</description>
+
+    <properties>
+        <!-- Java -->
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- API Testing -->
+        <restassured.version>6.0.0</restassured.version>
+        <jackson.version>2.18.3</jackson.version>
+
+        <!-- Testing -->
+        <testng.version>7.11.0</testng.version>
+        <assertj.version>3.27.6</assertj.version>
+
+        <!-- Reporting -->
+        <extentreports.version>5.1.2</extentreports.version>
+
+        <!-- Logging -->
+        <slf4j.version>2.0.17</slf4j.version>
+        <logback.version>1.5.23</logback.version>
+
+        <!-- Build -->
+        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+    </properties>
+
+    <dependencies>
+        <!-- ========== REST ASSURED ========== -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${restassured.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${restassured.version}</version>
+        </dependency>
+
+        <!-- ========== JSON PROCESSING ========== -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- ========== TESTING ========== -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+        </dependency>
+
+        <!-- ========== REPORTING ========== -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>${extentreports.version}</version>
+        </dependency>
+
+        <!-- ========== LOGGING ========== -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>reporting.ExtentTestListener</value>
+                        </property>
+                    </properties>
+                    <systemPropertyVariables>
+                        <env>${env}</env>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Smoke tests only -->
+        <profile>
+            <id>smoke</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles combine.self="override"/>
+                            <groups>smoke</groups>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>reporting.ExtentTestListener</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- CRUD tests only -->
+        <profile>
+            <id>crud</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles combine.self="override"/>
+                            <groups>crud</groups>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>reporting.ExtentTestListener</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Schema validation tests -->
+        <profile>
+            <id>schema</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <suiteXmlFiles combine.self="override"/>
+                            <groups>schema</groups>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>reporting.ExtentTestListener</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
