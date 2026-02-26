@@ -168,9 +168,9 @@ public class ApiClient {
 
     /**
      * Build request specification with configured settings.
+     * NOTE: Restful Booker API requires explicit header strings, not ContentType enum.
      */
     private RequestSpecification buildRequest() {
-        // Use explicit header strings - Restful Booker requires this
         RequestSpecification spec = given()
                 .baseUri(baseUrl)
                 .header("Content-Type", "application/json")
